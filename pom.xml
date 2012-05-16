@@ -14,7 +14,7 @@
 		<url>http://av.tu-berlin.de</url>
 	</organization>
 	<scm>
-		<url>git@github.com:tubav/OpenTeagle_API.git</url>
+		<url>https://github.com/tubav/OpenTeagle_API</url>
 	</scm>
 	<issueManagement>
 		<url>https://github.com/tubav/OpenTeagle_API/issues/</url>
@@ -25,19 +25,35 @@
 		<url>https://services.av.tu-berlin.de/bb/openteagle/</url>
 	</ciManagement>
 
+	<developers>
+		<developer>
+			<name>Alexander Willner</name>
+			<id>AlexanderWillner</id>
+			<email>alexander.willner@tu-berlin.de</email>
+			<organization>TU-Berlin</organization>
+			<roles>
+				<role>Java Developer</role>
+			</roles>
+		</developer>
+	</developers>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<version.cobertura>2.5.1</version.cobertura>
 		<version.pmd>2.7.1</version.pmd>
 		<version.findbugs>2.4.0</version.findbugs>
+		<version.site>3.0</version.site>
+		<version.info>2.4</version.info>
+		<version.junit>4.10</version.junit>
+		<version.java>1.7</version.java>
+		<version.jxr>2.3</version.jxr>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
+			<version>${version.junit}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -54,7 +70,12 @@
 			<plugins>
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.0</version>
+					<version>${version.site}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>${version.info}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -64,11 +85,11 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
 				<version>${version.cobertura}</version>
-                <configuration>
-                    <formats>
-                        <format>xml</format>
-                    </formats>
-                </configuration>
+				<configuration>
+					<formats>
+						<format>xml</format>
+					</formats>
+				</configuration>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -81,14 +102,22 @@
 
 		</plugins>
 	</build>
-	
+
 	<reporting>
 		<plugins>
-		<plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-pmd-plugin</artifactId>
-        <version>${version.pmd}</version>
-      </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>${version.jxr}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>${version.pmd}</version>
+				<configuration>
+					<targetJdk>${version.java}</targetJdk>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
