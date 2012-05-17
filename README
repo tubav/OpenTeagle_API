@@ -1,0 +1,17 @@
+OpenTeagle_API
+==============
+
+API of OpenTeagle
+
+
+Create the JAR file
+-------------------
+
+ * Jar only: mvn package
+ * Jar+Dependencies: mvn assemble:single
+
+
+Run the OpenTeagle CLI
+----------------------
+
+ * ./src/main/scripts/openteagle.sh

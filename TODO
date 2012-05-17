@@ -1,0 +1,3 @@
+ * Use XML binding instead of manually parsing the XML result
+ * mvn assemble: disable mocks in api.properties
+ * mvn package: disable junit
