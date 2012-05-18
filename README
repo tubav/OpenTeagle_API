@@ -4,14 +4,16 @@ OpenTeagle_API
 API of OpenTeagle
 
 
-Create the JAR file
--------------------
+Some Maven targets
+------------------
 
- * Jar only: mvn package
- * Jar+Dependencies: mvn assemble:single
+ * Create single JAR file: mvn package
+ * Create JAR with dependencies: mvn assemble:single
+ * Create JAXB classes: mvn jaxb2:generate
 
 
 Run the OpenTeagle CLI
 ----------------------
 
  * ./src/main/scripts/openteagle.sh
+ * TODO: mvn teagle:run 

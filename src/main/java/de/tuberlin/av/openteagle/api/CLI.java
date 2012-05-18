@@ -1,6 +1,7 @@
 package de.tuberlin.av.openteagle.api;
 
 import java.io.ByteArrayOutputStream;
+
 import java.io.PrintStream;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import de.tuberlin.av.openteagle.utils.TeagleProperties;
 
 public class CLI {
 
-	@Parameter(names = "--repourl", description = "The repository URL")
+	@Parameter(names = "-repourl", description = "The repository URL")
 	private final transient String repoUrl = TeagleProperties.getRepoUrl();
 
 	private static final String CMD_LST_VCT = "listVCTs";
@@ -86,15 +87,15 @@ public class CLI {
 
 	@Parameters(separators = "=", commandDescription = "List details about a specific VCT")
 	private class CommandShowVCT {
-		@Parameter(names = "--vctID", description = "The repository URL", required = true)
-		private String vctID = "";
+		@Parameter(names = "-id", description = "The repository URL", required = true)
+		private String id = "";
 
 		public String exec(final String url) {
 			final OpenTeagleAPI openteagle = new OpenTeagleAPI(url);
 			try {
-				return VctPrinter.printDetails(openteagle.getVCT(this.vctID));
+				return VctPrinter.printDetails(openteagle.getVCT(this.id));
 			} catch (VCTNotFoundException e) {
-				return " * ID: '" + this.vctID + "' (not found)";
+				return " * ID: '" + this.id + "' (not found)";
 			}
 		}
 	}

@@ -50,11 +50,11 @@
 		<version.jersey>1.12</version.jersey>
 	</properties>
 	<dependencies>
-<dependency>
-  <groupId>com.beust</groupId>
-  <artifactId>jcommander</artifactId>
-  <version>1.25</version>
-</dependency>
+		<dependency>
+			<groupId>com.beust</groupId>
+			<artifactId>jcommander</artifactId>
+			<version>1.25</version>
+		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-client</artifactId>
@@ -72,27 +72,26 @@
 			<version>${version.cobertura}</version>
 			<scope>test</scope>
 		</dependency>
-<dependency>
-	<groupId>org.apache.ant</groupId>
-	<artifactId>ant</artifactId>
-	<version>1.8.3</version>
-</dependency>
-            
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>1.8.3</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
 		<pluginManagement>
 			<plugins>
-			<plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>2.4</version>
-          <configuration>
-<source>${version.java}</source>
-          <target>${version.java}</target>
-          
-          </configuration>
-        </plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.4</version>
+					<configuration>
+						<source>${version.java}</source>
+						<target>${version.java}</target>
+					</configuration>
+				</plugin>
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
 					<version>${version.site}</version>
@@ -106,6 +105,24 @@
 		</pluginManagement>
 
 		<plugins>
+			<plugin>
+
+				<groupId>org.jvnet.jaxb2.maven2</groupId>
+				<artifactId>maven-jaxb2-plugin</artifactId>
+				<version>0.8.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+                        <configuration>
+                            <generateDirectory>src/main/java</generateDirectory>
+                            <generatePackage>de.tuberlin.av.openteagle.model.vct.jaxb</generatePackage>
+                        </configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
@@ -124,20 +141,20 @@
 					</execution>
 				</executions>
 			</plugin>
- <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <configuration>
-                <archive>
-                    <manifest>
-                        <mainClass>de.tuberlin.av.openteagle.api.CLI</mainClass>
-                    </manifest>
-                </archive>
-                <descriptorRefs>
-                    <descriptorRef>jar-with-dependencies</descriptorRef>
-                </descriptorRefs>
-            </configuration>
-        </plugin>
-        
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>de.tuberlin.av.openteagle.api.CLI</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 
