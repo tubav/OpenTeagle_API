@@ -9,9 +9,10 @@
 package de.tuberlin.av.openteagle.model.vct.jaxb;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
@@ -30,15 +31,13 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
+ *         &lt;element ref="{}shared"/>
  *         &lt;element ref="{}commonName"/>
  *         &lt;element ref="{}description"/>
- *         &lt;element ref="{}hasBookings"/>
- *         &lt;element ref="{}providesResources"/>
- *         &lt;element ref="{}shared"/>
- *         &lt;element ref="{}state"/>
  *         &lt;element ref="{}user"/>
+ *         &lt;element ref="{}state.id"/>
+ *         &lt;element ref="{}providesResources" maxOccurs="unbounded"/>
  *       &lt;/sequence>
- *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}integer" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -48,17 +47,17 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
+    "shared",
     "commonName",
     "description",
-    "hasBookings",
-    "providesResources",
-    "shared",
-    "state",
-    "user"
+    "user",
+    "stateId",
+    "providesResources"
 })
-@XmlRootElement(name = "vct")
-public class Vct {
+@XmlRootElement(name = "vctInstance")
+public class VctInstance {
 
+    protected boolean shared;
     @XmlElement(required = true)
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlSchemaType(name = "NCName")
@@ -66,16 +65,27 @@ public class Vct {
     @XmlElement(required = true)
     protected Description description;
     @XmlElement(required = true)
-    protected HasBookings hasBookings;
-    @XmlElement(required = true)
-    protected ProvidesResources providesResources;
-    protected boolean shared;
-    @XmlElement(required = true)
-    protected State state;
-    @XmlElement(required = true)
     protected User user;
-    @XmlAttribute(name = "id", required = true)
-    protected BigInteger id;
+    @XmlElement(name = "state.id", required = true)
+    protected BigInteger stateId;
+    @XmlElement(required = true)
+    protected List<ProvidesResources> providesResources;
+
+    /**
+     * Gets the value of the shared property.
+     * 
+     */
+    public boolean isShared() {
+        return shared;
+    }
+
+    /**
+     * Sets the value of the shared property.
+     * 
+     */
+    public void setShared(boolean value) {
+        this.shared = value;
+    }
 
     /**
      * Gets the value of the commonName property.
@@ -126,94 +136,6 @@ public class Vct {
     }
 
     /**
-     * Gets the value of the hasBookings property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HasBookings }
-     *     
-     */
-    public HasBookings getHasBookings() {
-        return hasBookings;
-    }
-
-    /**
-     * Sets the value of the hasBookings property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HasBookings }
-     *     
-     */
-    public void setHasBookings(HasBookings value) {
-        this.hasBookings = value;
-    }
-
-    /**
-     * Gets the value of the providesResources property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ProvidesResources }
-     *     
-     */
-    public ProvidesResources getProvidesResources() {
-        return providesResources;
-    }
-
-    /**
-     * Sets the value of the providesResources property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ProvidesResources }
-     *     
-     */
-    public void setProvidesResources(ProvidesResources value) {
-        this.providesResources = value;
-    }
-
-    /**
-     * Gets the value of the shared property.
-     * 
-     */
-    public boolean isShared() {
-        return shared;
-    }
-
-    /**
-     * Sets the value of the shared property.
-     * 
-     */
-    public void setShared(boolean value) {
-        this.shared = value;
-    }
-
-    /**
-     * Gets the value of the state property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link State }
-     *     
-     */
-    public State getState() {
-        return state;
-    }
-
-    /**
-     * Sets the value of the state property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link State }
-     *     
-     */
-    public void setState(State value) {
-        this.state = value;
-    }
-
-    /**
      * Gets the value of the user property.
      * 
      * @return
@@ -238,27 +160,56 @@ public class Vct {
     }
 
     /**
-     * Gets the value of the id property.
+     * Gets the value of the stateId property.
      * 
      * @return
      *     possible object is
      *     {@link BigInteger }
      *     
      */
-    public BigInteger getId() {
-        return id;
+    public BigInteger getStateId() {
+        return stateId;
     }
 
     /**
-     * Sets the value of the id property.
+     * Sets the value of the stateId property.
      * 
      * @param value
      *     allowed object is
      *     {@link BigInteger }
      *     
      */
-    public void setId(BigInteger value) {
-        this.id = value;
+    public void setStateId(BigInteger value) {
+        this.stateId = value;
+    }
+
+    /**
+     * Gets the value of the providesResources property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the providesResources property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getProvidesResources().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link ProvidesResources }
+     * 
+     * 
+     */
+    public List<ProvidesResources> getProvidesResources() {
+        if (providesResources == null) {
+            providesResources = new ArrayList<ProvidesResources>();
+        }
+        return this.providesResources;
     }
 
 }
