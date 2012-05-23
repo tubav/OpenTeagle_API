@@ -8,7 +8,7 @@ Some Maven targets
 ------------------
 
  * Create single JAR file: mvn package
- * Create JAR with dependencies: mvn assemble:single
+ * Create JAR with dependencies: mvn assembly:single
  * Create JAXB classes: mvn jaxb2:generate
 
 
