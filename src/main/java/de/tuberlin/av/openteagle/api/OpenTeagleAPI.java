@@ -1,12 +1,12 @@
 package de.tuberlin.av.openteagle.api;
 
 import java.util.LinkedList;
-
 import java.util.List;
 
 import de.tuberlin.av.openteagle.exceptions.VCTNotFoundException;
 import de.tuberlin.av.openteagle.model.vct.JaxbHelper;
 import de.tuberlin.av.openteagle.model.vct.jaxb.Vct;
+import de.tuberlin.av.openteagle.model.vct.jaxb.VctInstance;
 import de.tuberlin.av.openteagle.utils.TeagleProperties;
 
 public class OpenTeagleAPI {
@@ -39,5 +39,13 @@ public class OpenTeagleAPI {
 				return vct;
 		}
 		throw new VCTNotFoundException("");
+	}
+
+	//todo: Alex: just a first stub
+	public String createVct(VctInstance requestedVCT) {
+		String request = JaxbHelper.VctInstanceToString(requestedVCT);
+		System.out.println(request);
+		String result = this.repoClient.post("/vct/47", request);
+		return result;
 	}
 }

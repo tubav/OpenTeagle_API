@@ -20,4 +20,9 @@ public class RepoClientMock implements RestClient {
 
 		return result;
 	}
+
+	@Override
+	public String post(String path, String request) {
+		return "";
+	}
 }

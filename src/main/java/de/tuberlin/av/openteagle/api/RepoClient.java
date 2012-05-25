@@ -2,7 +2,9 @@ package de.tuberlin.av.openteagle.api;
 
 import java.net.URI;
 
+
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 public class RepoClient implements RestClient {
@@ -20,6 +22,12 @@ public class RepoClient implements RestClient {
 		return this.initWebResource(path).get(String.class);
 	}
 
+	@Override
+	public String post(String path, String request) {
+		ClientResponse response = this.initWebResource(path).post(ClientResponse.class, request);
+		return response.toString();
+	}
+
 	private WebResource initWebResource(final String path) {
 		final String completeURL = RepoClient.addPathToURL(this.repositoryUrl,
 				path);
@@ -32,5 +40,6 @@ public class RepoClient implements RestClient {
 		final URI completeURL = URI.create(completeString).normalize();
 		return completeURL.toString();
 	}
+
 
 }
