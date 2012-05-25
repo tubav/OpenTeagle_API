@@ -5,8 +5,8 @@
       <xs:sequence>
         <xs:element ref="shared"/>
         <xs:element ref="commonName"/>
-        <xs:element ref="description"/>
-        <xs:element ref="user"/>
+        <xs:element name="description" type="xs:NCName"/>
+        <xs:element name="user" type="xs:NCName"/>
         <xs:element ref="state.id"/>
         <xs:element maxOccurs="unbounded" ref="providesResources"/>
       </xs:sequence>

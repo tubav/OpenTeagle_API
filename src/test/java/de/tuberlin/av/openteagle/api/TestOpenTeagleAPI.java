@@ -42,11 +42,8 @@ public class TestOpenTeagleAPI {
 		requestedVCT.setCommonName("my new vct via API");
 		requestedVCT.setShared(false);
 		requestedVCT.setStateId(BigInteger.ONE);
-		Description value = new Description();
-		requestedVCT.setDescription(value);
-		User user = new User();
-		user.setId(BigInteger.ONE);
-		requestedVCT.setUser(user );
+		requestedVCT.setDescription("");
+		requestedVCT.setUser("1");
 		String result = this.openteagle.createVct(requestedVCT);
 		Assert.assertEquals("", result);
 	}
