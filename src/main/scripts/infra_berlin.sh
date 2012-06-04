@@ -19,6 +19,7 @@ raven_ptm_name="fokusptm"
 raven_ptm_port="8010"
 raven_ptm_screen="ptm"
 raven_ptm_start="sh /opt/ptm/bin/ptmhub -p ${raven_ptm_port} -g http://localhost:${raven_repo_ui_port}/teaglegw -x ${raven_ptm_name}"
+raven_ptm_url="reqproc"
 
 av_server="teagle.av.tu-berlin.de"
 av_user="root"
@@ -36,6 +37,11 @@ av_ptm_screen="ptm"
 av_ptm_start="sh /opt/ptm/bin/ptmhub -p ${av_ptm_port} -x ${av_ptm_name}"
 av_ptm_url="reqproc"
 
+local_repo_ui_port="9000"
+local_ptm_port="9010"
+local_repo_db_port="9080"
+
+
 parseargs () {
     found="0"
 	for p in "$@"; do
@@ -50,18 +56,18 @@ parseargs () {
 				found="1"
 				break
 				;;
-			"accessFokusPTM")
-				accessFokusPTM
+			"showLogFokusPTM")
+				showLogFokusPTM
 				found="1"
 				break
 				;;
-			"accessFokusRepoGUI")
-				accessFokusRepoGUI
+			"showLogFokusRepoGUI")
+				showLogFokusRepoGUI
 				found="1"
 				break
 				;;
-			"accessFokusRepoDB")
-				accessFokusRepoDB
+			"showLogFokusRepoDB")
+				showLogFokusRepoDB
 				found="1"
 				break
 				;;
@@ -79,13 +85,13 @@ parseargs () {
 	done
 	if [ "0" == "${found}" ]; then
 		echo "Usage: $0 <command>"
-		echo " * showURLs"
-		echo " * loginFokus"
-		echo " * loginTub"
-		echo " * setupPortForwardingFokus"
-		echo " * accessFokusPTM"
-		echo " * accessFokusRepoGUI"
-		echo " * accessFokusRepoDB"
+		echo " * showURLs                 : show available URLs"
+		echo " * loginFokus               : login on the FOKUS testbed"
+		echo " * loginTub                 : login on the TUB testbed"
+		echo " * setupPortForwardingFokus : forward ports for the FOKUS testbed"
+		echo " * showLogFokusPTM          : show FOKUS PTM log"
+		echo " * showLogFokusRepoGUI      : show FOKUS Repo GUI log"
+		echo " * showLogFokusRepoDB       : show FOKUS Repo DB log"
 		exit 1
 	fi
 }
@@ -99,45 +105,39 @@ showURLs () {
 	echo " * AV - Repository GUI: http://${av_server}:${av_repo_ui_port}/"
 	echo " * AV - Repository DB: http://${av_server}:${av_repo_db_port}/${av_repo_db_url}"
 	echo " * AV - PTM: http://${av_server}:${av_ptm_port}/${av_ptm_url}"
-	echo " * FOKUS - Repository GUI: run accessFokusRepoGUI"
-	echo " * FOKUS - Repository DB: run accessFokusRepoDB"
-	echo " * FOKUS - PTM: run accessFokusPTM"
-	echo " * FOKUS - Run setupPortForwardingFokus to forward all ports"
+	echo "-------- after running  setupPortForwardingFokus --------"
+	echo " * FOKUS - Repository GUI: http://localhost:${local_repo_ui_port}/"
+	echo " * FOKUS - Repository DB: http://localhost:${local_repo_db_port}/${raven_repo_db_url}"
+	echo " * FOKUS - PTM: http://localhost:${local_ptm_port}/${raven_ptm_url}"
 }
 
-accessFokusPTM () {
-	echo "Tunneling http://${raven_server}:${raven_ptm_port} to http://localhost:9010 ..."
-	ssh \
-	  -L 9010:"${raven_server}":"${raven_ptm_port}" -t "${fokus_user}"@"${fokus_server}" \
+showLogFokusPTM () {
+	ssh -t "${fokus_user}"@"${fokus_server}" \
 	  ssh -o GSSAPIAuthentication=no \
 	    -t "${raven_user}"@"${raven_server}" screen -x "${raven_ptm_screen}"
 }
 
-accessFokusRepoGUI () {
-	echo "Tunneling http://${raven_server}:${raven_repo_ui_port} to http://localhost:9000 ..."
-	ssh \
-	  -L 9000:"${raven_server}":"${raven_repo_ui_port}" -t "${fokus_user}"@"${fokus_server}" \
+showLogFokusRepoGUI () {
+	ssh -t "${fokus_user}"@"${fokus_server}" \
 	  ssh -o GSSAPIAuthentication=no \
 	    -t "${raven_user}"@"${raven_server}" sudo screen -x "${raven_repo_ui_screen}"
 }
 
-accessFokusRepoDB () {
-	echo "Tunneling http://${raven_server}:${raven_repo_db_port} to http://localhost:9080/${raven_repo_db_url} ..."
-	ssh \
-	  -L 9080:"${raven_server}":"${raven_repo_db_port}" -t "${fokus_user}"@"${fokus_server}" \
+showLogFokusRepoDB () {
+	ssh -t "${fokus_user}"@"${fokus_server}" \
 	  ssh -o GSSAPIAuthentication=no \
 	    -t "${raven_user}"@"${raven_server}" sudo screen -x "${raven_repo_db_screen}"
 }
 
 setupPortForwardingFokus () {
-	echo "Tunneling ${raven_server}:${raven_repo_ui_port} to localhost:9000 ..."
-	echo "Tunneling ${raven_server}:${raven_ptm_port} to localhost:9010 ..."
-	echo "Tunneling ${raven_server}:${raven_repo_db_port} to localhost:9080..."
+	echo "Tunneling ${raven_server}:${raven_repo_ui_port} to localhost:${local_repo_ui_port} ..."
+	echo "Tunneling ${raven_server}:${raven_ptm_port} to localhost:${local_ptm_port} ..."
+	echo "Tunneling ${raven_server}:${raven_repo_db_port} to localhost:${local_repo_db_port}..."
 
 	ssh \
- 	  -L 9000:"${raven_server}":"${raven_repo_ui_port}" \
- 	  -L 9010:"${raven_server}":"${raven_ptm_port}" \
- 	  -L 9080:"${raven_server}":"${raven_repo_db_port}" \
+ 	  -L ${local_repo_ui_port}:"${raven_server}":"${raven_repo_ui_port}" \
+ 	  -L ${local_ptm_port}:"${raven_server}":"${raven_ptm_port}" \
+ 	  -L ${local_repo_db_port}:"${raven_server}":"${raven_repo_db_port}" \
  	  "${fokus_user}"@"${fokus_server}" 
 }
 
