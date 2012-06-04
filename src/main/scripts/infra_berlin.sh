@@ -107,20 +107,26 @@ showURLs () {
 
 accessFokusPTM () {
 	echo "Tunneling http://${raven_server}:${raven_ptm_port} to http://localhost:9010 ..."
-	ssh -L 9010:"${raven_server}":"${raven_ptm_port}" -t "${fokus_user}"@"${fokus_server}" \
-	  ssh -t "${raven_user}"@"${raven_server}" screen -x "${raven_ptm_screen}"
+	ssh \
+	  -L 9010:"${raven_server}":"${raven_ptm_port}" -t "${fokus_user}"@"${fokus_server}" \
+	  ssh -o GSSAPIAuthentication=no \
+	    -t "${raven_user}"@"${raven_server}" screen -x "${raven_ptm_screen}"
 }
 
 accessFokusRepoGUI () {
 	echo "Tunneling http://${raven_server}:${raven_repo_ui_port} to http://localhost:9000 ..."
-	ssh -L 9000:"${raven_server}":"${raven_repo_ui_port}" -t "${fokus_user}"@"${fokus_server}" \
-	  ssh -t "${raven_user}"@"${raven_server}" sudo screen -x "${raven_repo_ui_screen}"
+	ssh \
+	  -L 9000:"${raven_server}":"${raven_repo_ui_port}" -t "${fokus_user}"@"${fokus_server}" \
+	  ssh -o GSSAPIAuthentication=no \
+	    -t "${raven_user}"@"${raven_server}" sudo screen -x "${raven_repo_ui_screen}"
 }
 
 accessFokusRepoDB () {
 	echo "Tunneling http://${raven_server}:${raven_repo_db_port} to http://localhost:9080/${raven_repo_db_url} ..."
- 	ssh -L 9080:"${raven_server}":"${raven_repo_db_port}" -t "${fokus_user}"@"${fokus_server}" \
-	  ssh -t "${raven_user}"@"${raven_server}" sudo screen -x "${raven_repo_db_screen}"
+	ssh \
+	  -L 9080:"${raven_server}":"${raven_repo_db_port}" -t "${fokus_user}"@"${fokus_server}" \
+	  ssh -o GSSAPIAuthentication=no \
+	    -t "${raven_user}"@"${raven_server}" sudo screen -x "${raven_repo_db_screen}"
 }
 
 setupPortForwardingFokus () {
@@ -128,7 +134,7 @@ setupPortForwardingFokus () {
 	echo "Tunneling ${raven_server}:${raven_ptm_port} to localhost:9010 ..."
 	echo "Tunneling ${raven_server}:${raven_repo_db_port} to localhost:9080..."
 
- 	ssh \
+	ssh \
  	  -L 9000:"${raven_server}":"${raven_repo_ui_port}" \
  	  -L 9010:"${raven_server}":"${raven_ptm_port}" \
  	  -L 9080:"${raven_server}":"${raven_repo_db_port}" \
@@ -158,8 +164,10 @@ loginFokus () {
     echo "sfi resources teagle.teagle.VCT_SLICENAME"
     echo "------------------------------------------------------------------------------"
     echo "Logging into Fokus server..."
-	ssh -t "${fokus_user}"@"${fokus_server}" \
-	  ssh "${raven_user}"@"${raven_server}"
+	ssh \
+	  -t "${fokus_user}"@"${fokus_server}" \
+	  ssh -o GSSAPIAuthentication=no \
+	    "${raven_user}"@"${raven_server}"
 }
 
 loginTub () {
