@@ -1,4 +1,7 @@
 #!/bin/bash
+# Author: Alexander Willner <alexander.willner@tu-berlin.de>
+# Todo: Refactor
+#       
 
 fokus_user="awi"
 fokus_server="sshsrv.fokus.fraunhofer.de"
@@ -42,8 +45,8 @@ parseargs () {
 				found="1"
 				break
 				;;
-			"accessFokusAll")
-				accessFokusAll
+			"setupPortForwardingFokus")
+				setupPortForwardingFokus
 				found="1"
 				break
 				;;
@@ -79,7 +82,7 @@ parseargs () {
 		echo " * showURLs"
 		echo " * loginFokus"
 		echo " * loginTub"
-		echo " * accessFokusAll"
+		echo " * setupPortForwardingFokus"
 		echo " * accessFokusPTM"
 		echo " * accessFokusRepoGUI"
 		echo " * accessFokusRepoDB"
@@ -99,7 +102,7 @@ showURLs () {
 	echo " * FOKUS - Repository GUI: run accessFokusRepoGUI"
 	echo " * FOKUS - Repository DB: run accessFokusRepoDB"
 	echo " * FOKUS - PTM: run accessFokusPTM"
-	echo " * FOKUS - Run accessFokusAll to forward all ports"
+	echo " * FOKUS - Run setupPortForwardingFokus to forward all ports"
 }
 
 accessFokusPTM () {
@@ -120,7 +123,7 @@ accessFokusRepoDB () {
 	  ssh -t "${raven_user}"@"${raven_server}" sudo screen -x "${raven_repo_db_screen}"
 }
 
-accessFokusAll () {
+setupPortForwardingFokus () {
 	echo "Tunneling ${raven_server}:${raven_repo_ui_port} to localhost:9000 ..."
 	echo "Tunneling ${raven_server}:${raven_ptm_port} to localhost:9010 ..."
 	echo "Tunneling ${raven_server}:${raven_repo_db_port} to localhost:9080..."
@@ -151,6 +154,9 @@ loginFokus () {
     echo "screen -x ${raven_repo_ui_screen}"
     echo "${raven_repo_ui_start}"
     echo "------------------------------------------------------------------------------"
+    echo " * To have a look at the slice:"
+    echo "sfi resources teagle.teagle.VCT_SLICENAME"
+    echo "------------------------------------------------------------------------------"
     echo "Logging into Fokus server..."
 	ssh -t "${fokus_user}"@"${fokus_server}" \
 	  ssh "${raven_user}"@"${raven_server}"
@@ -173,6 +179,9 @@ loginTub () {
     echo "sudo su -"
     echo "screen -x ${av_repo_ui_screen}"
     echo "${av_repo_ui_start}"
+    echo "------------------------------------------------------------------------------"
+    echo " * To have a look at the slice:"
+    echo "sfi resources teagle.teagle.VCT_SLICENAME"
     echo "------------------------------------------------------------------------------"
     echo "Logging into the AV server..."
 	ssh "${av_user}"@"${av_server}"
