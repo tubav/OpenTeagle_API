@@ -41,6 +41,9 @@ av_ptm_url="reqproc"
 pt_server="ptmatcher.service.tu-berlin.de"
 pt_user="root"
 pt_matcher_port="40123"
+pt_matcher_jar="pm/packetmatcher-1.0.1-jan2012-jar-with-dependencies.jar"
+pt_netview_dir="/Data/"
+pt_netview_jar="netview-1.0-master-jar-with-dependencies.jar"
 	
 local_repo_ui_port="9000"
 local_ptm_port="9010"
@@ -61,8 +64,13 @@ parseargs () {
 				found="1"
 				break
 				;;
-			"setupPortForwardingPT")
-				setupPortForwardingPT
+			"startPTMatcher")
+				startPTMatcher
+				found="1"
+				break
+				;;
+			"startPTNetview")
+				startPTNetview
 				found="1"
 				break
 				;;
@@ -91,8 +99,8 @@ parseargs () {
 				found="1"
 				break
 				;;
-			"loginPT")
-				loginPT
+			"loginPTMatcher")
+				loginPTMatcher
 				found="1"
 				break
 				;;
@@ -103,9 +111,10 @@ parseargs () {
 		echo " * showURLs                 : show available URLs"
 		echo " * loginFokus               : login on the FOKUS testbed"
 		echo " * loginTub                 : login on the TUB testbed"
-		echo " * loginPT                  : login on the PT testbed"
+		echo " * loginPTMatcher           : login on the PT matcher testbed"
+		echo " * startPTMatcher           : start PT matcher and forward ports"
+		echo " * startPTNetview           : start PT netview"
 		echo " * setupPortForwardingFokus : forward ports for the FOKUS testbed"
-		echo " * setupPortForwardingPT    : forward ports for the PT testbed"
 		echo " * showLogFokusPTM          : show FOKUS PTM log"
 		echo " * showLogFokusRepoGUI      : show FOKUS Repo GUI log"
 		echo " * showLogFokusRepoDB       : show FOKUS Repo DB log"
@@ -158,12 +167,21 @@ setupPortForwardingFokus () {
  	  "${fokus_user}"@"${fokus_server}" 
 }
 
-setupPortForwardingPT () {
-	echo "Tunneling ${pt_server}:${pt_matcher_port} to localhost:${local_matcher_port} ..."
+startPTNetview () {
+    # OS X: JAVA_HOME=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/
+	echo "Starting netview..."
+	cd "${pt_netview_dir}"
+	rm -rf ./cache ./db ./logs ./*.sql;
+	java -d32 -jar "${pt_netview_jar}"
+}
 
+startPTMatcher () {
+	echo "Tunneling ${pt_server}:${pt_matcher_port} to localhost:${local_matcher_port} ..."
+	
 	ssh \
  	  -R "${local_matcher_port}":localhost:"${pt_matcher_port}" \
- 	  "${pt_user}"@"${pt_server}" 
+ 	  -t "${pt_user}"@"${pt_server}" \
+ 	  java -jar "${pt_matcher_jar}"
 }
 
 
@@ -196,7 +214,7 @@ loginFokus () {
 	    "${raven_user}"@"${raven_server}"
 }
 
-loginPT () {
+loginPTMatcher () {
     clear
     printGeneralCommands
     echo "Logging into PT server..."
