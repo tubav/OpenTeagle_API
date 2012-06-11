@@ -1,0 +1,37 @@
+#!/bin/bash
+
+raven_server="192.168.144.12"
+raven_user="teagle"
+raven_repo_port="8080"
+sfi_auth="teagle.teagle"
+lib="../python"
+
+parseargs()
+{
+	found="0"
+		for p in "$@"; do 
+			case "$p" in
+				"deleteVct")
+					deleteVct $2 
+					found="1"
+					break
+					;;
+			esac
+		done
+		if [ "0" == "${found}" ]; then
+			echo "Usage: $0 <command>"
+			echo " * deleteVct vctName"
+		fi
+}
+
+deleteVct()
+{
+	echo "VCTName is $1"
+	python $lib/deleteVct.py $1	
+	ssh $raven_user@$raven_server "sfi delete $sfi_auth.$1;sfi remove $sfi_auth.$1"
+
+}
+
+
+parseargs "$@"
+
