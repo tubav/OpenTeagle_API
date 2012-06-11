@@ -37,10 +37,15 @@ av_ptm_screen="ptm"
 av_ptm_start="sh /opt/ptm/bin/ptmhub -p ${av_ptm_port} -x ${av_ptm_name}"
 av_ptm_url="reqproc"
 
+#pt_server="ptmatcher.av.tu-berlin.de"
+pt_server="ptmatcher.service.tu-berlin.de"
+pt_user="root"
+pt_matcher_port="40123"
+	
 local_repo_ui_port="9000"
 local_ptm_port="9010"
 local_repo_db_port="9080"
-
+local_matcher_port="40123"
 
 parseargs () {
     found="0"
@@ -53,6 +58,11 @@ parseargs () {
 				;;
 			"setupPortForwardingFokus")
 				setupPortForwardingFokus
+				found="1"
+				break
+				;;
+			"setupPortForwardingPT")
+				setupPortForwardingPT
 				found="1"
 				break
 				;;
@@ -81,6 +91,11 @@ parseargs () {
 				found="1"
 				break
 				;;
+			"loginPT")
+				loginPT
+				found="1"
+				break
+				;;
 		esac
 	done
 	if [ "0" == "${found}" ]; then
@@ -88,7 +103,9 @@ parseargs () {
 		echo " * showURLs                 : show available URLs"
 		echo " * loginFokus               : login on the FOKUS testbed"
 		echo " * loginTub                 : login on the TUB testbed"
+		echo " * loginPT                  : login on the PT testbed"
 		echo " * setupPortForwardingFokus : forward ports for the FOKUS testbed"
+		echo " * setupPortForwardingPT    : forward ports for the PT testbed"
 		echo " * showLogFokusPTM          : show FOKUS PTM log"
 		echo " * showLogFokusRepoGUI      : show FOKUS Repo GUI log"
 		echo " * showLogFokusRepoDB       : show FOKUS Repo DB log"
@@ -141,6 +158,14 @@ setupPortForwardingFokus () {
  	  "${fokus_user}"@"${fokus_server}" 
 }
 
+setupPortForwardingPT () {
+	echo "Tunneling ${pt_server}:${pt_matcher_port} to localhost:${local_matcher_port} ..."
+
+	ssh \
+ 	  -R "${local_matcher_port}":localhost:"${pt_matcher_port}" \
+ 	  "${pt_user}"@"${pt_server}" 
+}
+
 
 loginFokus () {
     clear
@@ -160,14 +185,22 @@ loginFokus () {
     echo "screen -x ${raven_repo_ui_screen}"
     echo "${raven_repo_ui_start}"
     echo "------------------------------------------------------------------------------"
-    echo " * To have a look at the slice:"
-    echo "sfi resources teagle.teagle.VCT_SLICENAME"
+    echo " * Slice details: sfi resources teagle.teagle.VCT_SLICENAME"
+    echo " * Slice list: sfi list teagle.teagle"
+    ehco " * Slice deletion: sfi remove teagle.teagle.VCT_SLICENAME"
     echo "------------------------------------------------------------------------------"
     echo "Logging into Fokus server..."
 	ssh \
 	  -t "${fokus_user}"@"${fokus_server}" \
 	  ssh -o GSSAPIAuthentication=no \
 	    "${raven_user}"@"${raven_server}"
+}
+
+loginPT () {
+    clear
+    printGeneralCommands
+    echo "Logging into PT server..."
+	ssh "${pt_user}"@"${pt_server}" 
 }
 
 loginTub () {
