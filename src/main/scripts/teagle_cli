@@ -28,11 +28,9 @@ parseargs()
 deleteVct()
 {
 	echo "VCTName is $1"
-	python $lib/deleteVct.py $1	
-	ssh $tunnel_user@$tunnel_server ssh -o GSSAPIAuthentication=no $raven_user@$raven_server "bash -c 'sfi delete $sfi_auth.$1; sfi remove $sfi_auth.$1;'"
-	#	ssh -t $tunnel_user@$tunnel_server ssh -t $raven_user@$raven_server "sfi delete $sfi_auth.$1; sfi remove $sfi_auth.$1"
+	python $lib/deleteVct.py $1
+	ssh -t $tunnel_user@$tunnel_server ssh -t -o GSSAPIAuthentication=no $raven_user@$raven_server "sfi delete $sfi_auth.$1"
+	ssh -t $tunnel_user@$tunnel_server ssh -t -o GSSAPIAuthentication=no $raven_user@$raven_server "sfi remove $sfi_auth.$1"
 }
 
-
 parseargs "$@"
-
