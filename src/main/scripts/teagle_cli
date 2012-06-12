@@ -1,8 +1,9 @@
 #!/bin/bash
 
+tunnel_server="sshsrv.fokus.fraunhofer.de"
+tunnel_user="awi"
 raven_server="192.168.144.12"
 raven_user="teagle"
-raven_repo_port="8080"
 sfi_auth="teagle.teagle"
 lib="../python"
 
@@ -28,8 +29,8 @@ deleteVct()
 {
 	echo "VCTName is $1"
 	python $lib/deleteVct.py $1	
-	ssh $raven_user@$raven_server "sfi delete $sfi_auth.$1;sfi remove $sfi_auth.$1"
-
+	ssh $tunnel_user@$tunnel_server ssh -o GSSAPIAuthentication=no $raven_user@$raven_server "bash -c 'sfi delete $sfi_auth.$1; sfi remove $sfi_auth.$1;'"
+	#	ssh -t $tunnel_user@$tunnel_server ssh -t $raven_user@$raven_server "sfi delete $sfi_auth.$1; sfi remove $sfi_auth.$1"
 }
 
 
