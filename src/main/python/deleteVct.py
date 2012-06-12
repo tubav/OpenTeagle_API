@@ -10,7 +10,7 @@ from teagle.repository.entities_default import Vct
 
     
 def main(argv):                          
-    repoUrl = "http://root:r00t@localhost:9000/repository/rest"                
+    repoUrl = "http://root:r00t@localhost:9080/repository/rest"
     for arg in argv: 
 	print arg
     vctName = argv[1]
