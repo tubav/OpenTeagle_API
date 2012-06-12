@@ -6,6 +6,10 @@
 fokus_user="awi"
 fokus_server="sshsrv.fokus.fraunhofer.de"
 
+fokus0_server="192.168.144.56"
+fokus0_user="teagle"
+fokus0_cleanup="sudo killall impd"
+
 raven_server="192.168.144.12"
 raven_user="teagle"
 raven_repo_ui_port="8000"
@@ -59,6 +63,11 @@ parseargs () {
 				found="1"
 				break
 				;;
+			"cleanup")
+				cleanup $@
+				found="1"
+				break
+				;;
 			"setupPortForwardingFokus")
 				setupPortForwardingFokus
 				found="1"
@@ -109,6 +118,7 @@ parseargs () {
 	if [ "0" == "${found}" ]; then
 		echo "Usage: $0 <command>"
 		echo " * showURLs                 : show available URLs"
+		echo " * cleanup <vct>            : cleanup the testbeds"
 		echo " * loginFokus               : login on the FOKUS testbed"
 		echo " * loginTub                 : login on the TUB testbed"
 		echo " * loginPTMatcher           : login on the PT matcher testbed"
@@ -135,6 +145,17 @@ showURLs () {
 	echo " * FOKUS - Repository GUI: http://localhost:${local_repo_ui_port}/"
 	echo " * FOKUS - Repository DB: http://localhost:${local_repo_db_port}/${raven_repo_db_url}"
 	echo " * FOKUS - PTM: http://localhost:${local_ptm_port}/${raven_ptm_url}"
+}
+
+cleanup () {
+    if [ "" == "$2" ]; then
+      echo "Syntax: cleanup <vct>"
+      exit 1
+    fi
+	ssh -t "${fokus_user}"@"${fokus_server}" \
+	  ssh -o GSSAPIAuthentication=no \
+	    -t "${fokus0_user}"@"${fokus0_server}" "${fokus0_cleanup}"
+	./teagle_cli deleteVct $1
 }
 
 showLogFokusPTM () {
@@ -205,7 +226,7 @@ loginFokus () {
     echo "------------------------------------------------------------------------------"
     echo " * Slice details: sfi resources teagle.teagle.VCT_SLICENAME"
     echo " * Slice list: sfi list teagle.teagle"
-    ehco " * Slice deletion: sfi remove teagle.teagle.VCT_SLICENAME"
+    echo " * Slice deletion: sfi remove teagle.teagle.VCT_SLICENAME"
     echo "------------------------------------------------------------------------------"
     echo "Logging into Fokus server..."
 	ssh \
