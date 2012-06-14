@@ -8,7 +8,7 @@ fokus_server="sshsrv.fokus.fraunhofer.de"
 
 fokus0_server="192.168.144.56"
 fokus0_user="teagle"
-fokus0_cleanup="sudo killall impd"
+fokus0_cleanup="sudo killall impd iperf"
 
 raven_server="192.168.144.12"
 raven_user="teagle"
@@ -27,6 +27,7 @@ raven_ptm_url="reqproc"
 
 av_server="teagle.av.tu-berlin.de"
 av_user="root"
+av_cleanup="sudo killall impd iperf"
 av_repo_ui_port="8000"
 av_repo_ui_screen="repogui"
 av_repo_ui_start="${raven_repo_ui_start}"
@@ -152,10 +153,16 @@ cleanup () {
       echo "Syntax: cleanup <vct>"
       exit 1
     fi
+    
 	ssh -t "${fokus_user}"@"${fokus_server}" \
 	  ssh -o GSSAPIAuthentication=no \
 	    -t "${fokus0_user}"@"${fokus0_server}" "${fokus0_cleanup}"
-	./teagle_cli deleteVct $1
+	
+	ssh -t "${fokus_user}"@"${fokus_server}" \
+	  ssh -o GSSAPIAuthentication=no \
+	    -t "${av_user}"@"${av_server}" "${av_cleanup}"
+	
+	./teagle_cli deleteVct $2
 }
 
 showLogFokusPTM () {
