@@ -8,7 +8,7 @@ fokus_server="sshsrv.fokus.fraunhofer.de"
 
 fokus0_server="192.168.144.56"
 fokus0_user="teagle"
-fokus0_cleanup="sudo killall impd iperf"
+fokus0_cleanup="sudo killall impd4e iperf"
 
 raven_server="192.168.144.12"
 raven_user="teagle"
